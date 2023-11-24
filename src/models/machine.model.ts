@@ -30,4 +30,6 @@ export class Machine extends Entity {
   accountId: string;
 }
 
+export interface MachineRelations {}
+
 export type MachineWithRelations = Machine;
