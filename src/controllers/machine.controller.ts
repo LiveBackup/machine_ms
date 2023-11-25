@@ -45,9 +45,14 @@ export class MachineController {
         },
       },
     })
-    newMachine: Machine,
+    newMachine: Partial<Machine>,
   ): Promise<Machine> {
-    throw new Error('Method not implemented');
+    // Create the machine in DB
+    const createdMachine = await this.machineService.create(newMachine);
+
+    // Set the response code to 201 and return the createdMachine
+    this.httpResponse.status(201);
+    return createdMachine;
   }
 
   @get('/machine/{id}')

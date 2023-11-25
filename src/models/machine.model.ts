@@ -17,6 +17,9 @@ export class Machine extends Entity {
   @property({
     type: 'string',
     required: true,
+    jsonSchema: {
+      minLength: 3,
+    },
   })
   name: string;
 

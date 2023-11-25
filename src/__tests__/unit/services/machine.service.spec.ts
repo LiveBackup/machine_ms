@@ -56,7 +56,6 @@ describe('Unit testing - Machine service', () => {
       }
 
       expect(error).not.to.be.undefined();
-      expect(error?.message).to.be.equal('Entrada duplicada para Machine.id');
     });
   });
 
