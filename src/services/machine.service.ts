@@ -1,7 +1,13 @@
-import {BindingScope, injectable} from '@loopback/core';
+import {BindingKey, BindingScope, injectable} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {Machine} from '../models';
 import {MachineRepository} from '../repositories';
+
+export namespace MachineServiceBindings {
+  export const SERVICE = BindingKey.create<MachineService>(
+    'services.MachineService',
+  );
+}
 
 @injectable({scope: BindingScope.SINGLETON})
 export class MachineService {
