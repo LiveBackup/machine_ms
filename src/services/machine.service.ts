@@ -17,7 +17,7 @@ export class MachineService {
   ) {}
 
   async create(newMachine: Partial<Machine>): Promise<Machine> {
-    throw new Error('Method not implemented');
+    return this.machineRepository.create(newMachine);
   }
 
   async findById(id: string): Promise<Machine | null> {
