@@ -10,7 +10,10 @@ import {
 import {givenServices} from '../../helpers/services.helpers';
 
 describe('Unit testing - Machine service', () => {
+
+  // Machine repository
   let machineRepository: MachineRepository;
+  // Machine service
   let machineService: MachineService;
 
   before(() => {
