@@ -1,5 +1,6 @@
 import {inject} from '@loopback/core';
 import {
+  HttpErrors,
   Response,
   RestBindings,
   del,
@@ -65,7 +66,14 @@ export class MachineController {
     },
   })
   async getMachineById(@param.path.string('id') id: string): Promise<Machine> {
-    throw new Error('Method not implemented');
+    // Get the machine info using the service
+    const machine = await this.machineService.findById(id);
+
+    // Verify the machine exists
+    if (!machine)
+      throw new HttpErrors[404]('There not exists a machine with the given ID');
+
+    return machine;
   }
 
   @put('/machine/{id}')

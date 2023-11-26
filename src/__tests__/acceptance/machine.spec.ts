@@ -96,7 +96,31 @@ describe('e2e - Machine Controller', () => {
     });
   });
 
-  describe(`Machine search - ${getMachineById} Endpoint`, () => {});
+  describe(`Machine search - ${getMachineById} Endpoint`, () => {
+    it('Gets the machine using its ID', async () => {
+      // Create the machine
+      const newMachine = givenMachine({id: '1'});
+      await machineRepository.create(newMachine);
+
+      // Get the store machine using the endpoint
+      const response = await client
+        .get(getMachineById.replace('{id}', '1'))
+        .expect(200);
+      const machine = response.body as Machine;
+
+      expect(machine.name).to.be.equal(newMachine.name);
+      expect(machine.accountId).to.be.equal(newMachine.accountId);
+    });
+
+    it('Returns 404 code when no machine is found', async () => {
+      // Create a machine
+      const newMachine = givenMachine({id: 'some_id'});
+      await machineRepository.create(newMachine);
+
+      // Query the machine for a diferent ID and expect to fail
+      await client.get(getMachineById.replace('{id}', '1')).expect(404);
+    });
+  });
 
   describe(`Machine update - ${updateMachine} Endpoint`, () => {});
 
