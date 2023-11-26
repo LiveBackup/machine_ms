@@ -25,7 +25,7 @@ export class MachineService {
   }
 
   async findByAccountId(accountId: string): Promise<Machine[]> {
-    throw new Error('Method not implemented');
+    return this.machineRepository.find({where: {accountId}});
   }
 
   async updateById(
