@@ -118,17 +118,27 @@ describe('Unit testing - Machine service', () => {
   });
 
   describe('Deletion by id', () => {
-    it('Thow an error due the method has not been implemented', async () => {
-      let error: Error | undefined = undefined;
+    it('Deletes a machine', async () => {
+      // Create the machine in DB
+      const machine = givenMachine();
+      await machineRepository.create(machine);
 
-      try {
-        await machineService.deleteById('');
-      } catch (err) {
-        error = err;
-      }
+      // Use the service to delete the machine
+      const deletedMachine = await machineService.deleteById(machine.id);
+      expect(deletedMachine).not.to.be.Null();
 
-      expect(error).not.to.be.undefined();
-      expect(error?.message).to.be.equal('Method not implemented');
+      expect(deletedMachine?.name).to.be.equal(machine.name);
+      expect(deletedMachine?.accountId).to.be.equal(machine.accountId);
+    });
+
+    it('Returns null when not exist a machine with the given ID', async () => {
+      // Creae a machine in DB
+      const someMachine = givenMachine();
+      await machineRepository.create(someMachine);
+
+      // Use the service to try to delete the machine
+      const deletedMachine = await machineService.deleteById('someMachineId');
+      expect(deletedMachine).to.be.Null();
     });
   });
 });

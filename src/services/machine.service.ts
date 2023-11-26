@@ -40,6 +40,10 @@ export class MachineService {
   }
 
   async deleteById(id: string): Promise<Machine | null> {
-    throw new Error('Method not implemented');
+    const machine = await this.findById(id);
+    if (!machine) return null;
+
+    await this.machineRepository.deleteById(id);
+    return machine;
   }
 }
