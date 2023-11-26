@@ -21,7 +21,11 @@ export class MachineService {
   }
 
   async findById(id: string): Promise<Machine | null> {
-    throw new Error('Method not implemented');
+    try {
+      return await this.machineRepository.findById(id);
+    } catch (_) {
+      return null;
+    }
   }
 
   async findByAccountId(accountId: string): Promise<Machine[]> {

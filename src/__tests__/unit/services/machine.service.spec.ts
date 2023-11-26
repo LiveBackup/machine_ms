@@ -10,7 +10,6 @@ import {
 import {givenServices} from '../../helpers/services.helpers';
 
 describe('Unit testing - Machine service', () => {
-
   // Machine repository
   let machineRepository: MachineRepository;
   // Machine service
@@ -63,17 +62,28 @@ describe('Unit testing - Machine service', () => {
   });
 
   describe('Search by id', () => {
-    it('Thow an error due the method has not been implemented', async () => {
-      let error: Error | undefined = undefined;
+    it('Get a machine using its ID', async () => {
+      // Create a mock machine
+      const id = 'some_id';
+      const mockMachine = givenMachine({id});
+      await machineRepository.create(mockMachine);
 
-      try {
-        await machineService.findById('');
-      } catch (err) {
-        error = err;
-      }
+      // Search the machine using the ID
+      const dbMachine = await machineService.findById(id);
+      expect(dbMachine).not.to.be.Null();
 
-      expect(error).not.to.be.undefined();
-      expect(error?.message).to.be.equal('Method not implemented');
+      expect(dbMachine?.name).to.be.equal(mockMachine.name);
+      expect(dbMachine?.accountId).to.be.equal(mockMachine.accountId);
+    });
+
+    it('Returns null when ID does not exist', async () => {
+      // Create a mock machine
+      const mockMachine = givenMachine({id: '1'});
+      await machineRepository.create(mockMachine);
+
+      // Search the machine using the ID
+      const dbMachine = await machineService.findById('2');
+      expect(dbMachine).to.be.Null();
     });
   });
 
