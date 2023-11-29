@@ -88,17 +88,32 @@ describe('Unit testing - Machine service', () => {
   });
 
   describe('Search by account id', () => {
-    it('Thow an error due the method has not been implemented', async () => {
-      let error: Error | undefined = undefined;
+    beforeEach(async () => {
+      const machines = [
+        givenMachine({id: undefined, name: 'Machine1', accountId: '1'}),
+        givenMachine({id: undefined, name: 'Machine2', accountId: '1'}),
+        givenMachine({id: undefined, name: 'Machine3', accountId: '1'}),
+        givenMachine({id: undefined, name: 'Machine4', accountId: '2'}),
+        givenMachine({id: undefined, name: 'Machine5', accountId: '2'}),
+      ];
 
-      try {
-        await machineService.findByAccountId('');
-      } catch (err) {
-        error = err;
-      }
+      await machineRepository.createAll(machines);
+    });
 
-      expect(error).not.to.be.undefined();
-      expect(error?.message).to.be.equal('Method not implemented');
+    it('Finds the machines associated to the accounts', async () => {
+      // Get the account 1 machines
+      const account1Machines = await machineService.findByAccountId('1');
+      expect(account1Machines.length).to.be.equal(3);
+
+      // Get the account 2 machines
+      const account2Machines = await machineService.findByAccountId('2');
+      expect(account2Machines.length).to.be.equal(2);
+    });
+
+    it('Returns 0-sized array for an account with no machines', async () => {
+      // Get the account 3 machines
+      const account3Machines = await machineService.findByAccountId('3');
+      expect(account3Machines.length).to.be.equal(0);
     });
   });
 
