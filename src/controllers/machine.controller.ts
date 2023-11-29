@@ -110,6 +110,14 @@ export class MachineController {
     },
   })
   async deleteMachine(@param.path.string('id') id: string): Promise<Machine> {
-    throw new Error('Method not implemented');
+    // Try to delete the account
+    const deletedAccount = await this.machineService.deleteById(id);
+
+    // Check if an account was removed
+    if (!deletedAccount)
+      throw new HttpErrors[404]('There not exists a machine with the given ID');
+
+    // Return the deleted account
+    return deletedAccount;
   }
 }

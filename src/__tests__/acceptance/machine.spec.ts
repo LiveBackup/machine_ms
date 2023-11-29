@@ -124,5 +124,44 @@ describe('e2e - Machine Controller', () => {
 
   describe(`Machine update - ${updateMachine} Endpoint`, () => {});
 
-  describe(`Machine deletion - ${deleteMachine} Endpoint`, () => {});
+  describe(`Machine deletion - ${deleteMachine} Endpoint`, () => {
+    // The machines to test with
+    let machine1: Machine;
+
+    beforeEach(async () => {
+      const machines = ['Machine1', 'Machine2'].map(name => {
+        return givenMachine({id: undefined, name});
+      });
+
+      [machine1] = await machineRepository.createAll(machines);
+    });
+
+    it('Deletes a machine', async () => {
+      // Get the store machine using the endpoint
+      const response = await client
+        .del(deleteMachine.replace('{id}', machine1.id))
+        .expect(200);
+      const machine = response.body as Machine;
+
+      // Check the values of returned machine
+      expect(machine.id).to.be.equal(machine1.id);
+      expect(machine.name).to.be.equal(machine1.name);
+      expect(machine.accountId).to.be.equal(machine1.accountId);
+
+      // Check the number of Machines in DB has decreased
+      const machinesCount = await machineRepository.count();
+      expect(machinesCount.count).to.be.equal(1);
+    });
+
+    it('Does not found the machine with the given ID', async () => {
+      // Get the store machine using the endpoint
+      await client
+        .del(deleteMachine.replace('{id}', 'is not the machine1.id'))
+        .expect(404);
+
+      // Check the number of Machines in DB has decreased
+      const machinesCount = await machineRepository.count();
+      expect(machinesCount.count).to.be.equal(2);
+    });
+  });
 });
