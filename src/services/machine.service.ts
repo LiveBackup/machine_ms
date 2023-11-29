@@ -36,7 +36,13 @@ export class MachineService {
     id: string,
     newData: Partial<Machine>,
   ): Promise<Machine | null> {
-    throw new Error('Method not implemented');
+    try {
+      await this.machineRepository.updateById(id, newData);
+    } catch (_) {
+      return null;
+    }
+
+    return this.findById(id);
   }
 
   async deleteById(id: string): Promise<Machine | null> {

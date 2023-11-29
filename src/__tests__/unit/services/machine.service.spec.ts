@@ -103,17 +103,39 @@ describe('Unit testing - Machine service', () => {
   });
 
   describe('Updates by id', () => {
-    it('Thow an error due the method has not been implemented', async () => {
-      let error: Error | undefined = undefined;
+    it('Updates the machine info', async () => {
+      // Create a mock machine
+      const id = 'some_id';
+      const mockMachine = givenMachine({id});
+      await machineRepository.create(mockMachine);
 
-      try {
-        await machineService.updateById('', {});
-      } catch (err) {
-        error = err;
-      }
+      // Updates the machine info
+      const newMachineInfo: Partial<Machine> = {name: 'New Name'};
+      const updatedMachine = await machineService.updateById(
+        mockMachine.id,
+        newMachineInfo,
+      );
 
-      expect(error).not.to.be.undefined();
-      expect(error?.message).to.be.equal('Method not implemented');
+      expect(updatedMachine).not.to.be.Null();
+      expect(updatedMachine?.name).to.be.equal(newMachineInfo.name);
+      expect(updatedMachine?.name).not.to.be.equal(mockMachine.name);
+      expect(updatedMachine?.accountId).to.be.equal(mockMachine.accountId);
+    });
+
+    it('Does not find the machine by the given ID', async () => {
+      // Create a mock machine
+      const id = 'some_id';
+      const mockMachine = givenMachine({id});
+      await machineRepository.create(mockMachine);
+
+      // Updates the machine info
+      const newMachineInfo: Partial<Machine> = {name: 'New Name'};
+      const updatedMachine = await machineService.updateById(
+        'another machine id',
+        newMachineInfo,
+      );
+
+      expect(updatedMachine).to.be.Null();
     });
   });
 
