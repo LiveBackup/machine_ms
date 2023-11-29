@@ -24,6 +24,7 @@ export class AccountMachineController {
   async getAccountMachines(
     @param.path.string('accountId') accountId: string,
   ): Promise<Machine[]> {
-    throw new Error('Method not implemented');
+    const machines = await this.machineService.findByAccountId(accountId);
+    return machines;
   }
 }
