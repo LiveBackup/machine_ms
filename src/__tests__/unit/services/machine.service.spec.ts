@@ -118,6 +118,7 @@ describe('Unit testing - Machine service', () => {
 
       expect(updatedMachine).not.to.be.Null();
       expect(updatedMachine?.name).to.be.equal(newMachineInfo.name);
+      expect(updatedMachine?.name).not.to.be.equal(mockMachine.name);
       expect(updatedMachine?.accountId).to.be.equal(mockMachine.accountId);
     });
 

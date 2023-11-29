@@ -122,7 +122,38 @@ describe('e2e - Machine Controller', () => {
     });
   });
 
-  describe(`Machine update - ${updateMachine} Endpoint`, () => {});
+  describe(`Machine update - ${updateMachine} Endpoint`, () => {
+    it('Updates the machine using its ID', async () => {
+      // Create the machine
+      const newMachine = givenMachine();
+      await machineRepository.create(newMachine);
+
+      // Get the store machine using the endpoint
+      const newMachineInfo: Partial<Machine> = {name: 'New machine name'};
+      const response = await client
+        .put(updateMachine.replace('{id}', newMachine.id))
+        .send(newMachineInfo)
+        .expect(200);
+      const updatedMachine = response.body as Machine;
+
+      expect(updatedMachine.name).to.be.equal(newMachineInfo.name);
+      expect(updatedMachine.name).not.to.be.equal(newMachine.name);
+      expect(updatedMachine.accountId).to.be.equal(newMachine.accountId);
+    });
+
+    it('Does not found the machine by its ID', async () => {
+      // Create the machine
+      const newMachine = givenMachine({id: undefined});
+      await machineRepository.create(newMachine);
+
+      // Get the store machine using the endpoint
+      const newMachineInfo: Partial<Machine> = {name: 'New machine name'};
+      await client
+        .put(updateMachine.replace('{id}', 'another_id'))
+        .send(newMachineInfo)
+        .expect(404);
+    });
+  });
 
   describe(`Machine deletion - ${deleteMachine} Endpoint`, () => {});
 });

@@ -97,7 +97,15 @@ export class MachineController {
     })
     newMachineInfo: Partial<Machine>,
   ): Promise<Machine> {
-    throw new Error('Method not implemented');
+    // Update the machine using the service
+    const updatedMachine = await this.machineService.updateById(
+      id,
+      newMachineInfo,
+    );
+
+    if (!updatedMachine)
+      throw new HttpErrors[404]('There not exists a machine with the given ID');
+    return updatedMachine;
   }
 
   @del('/machine/{id}')
